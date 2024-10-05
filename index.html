@@ -1,0 +1,334 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Vega-Lite Visualization</title>
+    <script src="https://cdn.jsdelivr.net/npm/vega@5"></script>
+    <script src="https://cdn.jsdelivr.net/npm/vega-lite@5"></script>
+    <script src="https://cdn.jsdelivr.net/npm/vega-embed@6"></script>
+    <style>
+        #vis , #vis1 {
+            width: 800px;
+            height: 400px;
+        }
+        /* Basic Text Styles */
+body {
+    font-family: Arial, sans-serif; /* Change font family */
+    font-size: 16px; /* Base font size */
+    color: #333; /* Text color */
+    line-height: 1.5; /* Line height */
+    padding: auto;
+    margin: 0 16rem;
+}
+
+/* Headings */
+h1 {
+    font-size: 2.5em; /* Font size for h1 */
+    color: #1f77b4; /* Color for h1 */
+    font-weight: bold; /* Bold text */
+    margin-bottom: 10px; /* Space below heading */
+}
+
+h2 {
+    font-size: 2em; /* Font size for h2 */
+    color: #ff7f0e; /* Color for h2 */
+    margin-bottom: 8px; /* Space below heading */
+}
+
+/* Paragraphs */
+p {
+    font-size: 1em; /* Font size for paragraphs */
+    color: #666; /* Color for paragraph text */
+    margin-bottom: 15px; /* Space below paragraphs */
+}
+
+/* Links */
+a {
+    color: #007bff; /* Link color */
+    text-decoration: none; /* Remove underline */
+}
+
+a:hover {
+    text-decoration: underline; /* Underline on hover */
+}
+
+/* Custom Class for Dropdown Label */
+.dropdown-label {
+    font-weight: bold; /* Make the label bold */
+    font-size: 1em; /* Set font size */
+    color: #333; /* Set label color */
+    margin-right: 8px; /* Space between label and dropdown */
+}
+
+/* Custom Class for Button Text */
+.button {
+    font-size: 1em; /* Font size for buttons */
+    font-weight: bold; /* Bold text */
+    color: white; /* Text color */
+    background-color: #28a745; /* Button background color */
+    padding: 10px 20px; /* Button padding */
+    border: none; /* Remove border */
+    border-radius: 4px; 
+    cursor: pointer; 
+}
+
+    </style>
+</head>
+<body>
+    <h1>Job vacancies, states and territories</h1>
+    <div id="vis1"></div>
+
+    <p>The first visualization presents a line chart illustrating job vacancies across various Australian states and territories over time, specifically from August 2019 to August 2024. Each line represents a different state, including New South Wales (NSW), Victoria (Vic), Queensland (Qld), South Australia (SA), Western Australia (WA), Tasmania (Tas), Northern Territory (NT), and the Australian Capital Territory (ACT). The x-axis displays the quarters, while the y-axis quantifies job vacancies in thousands. This visualization effectively highlights trends in job vacancies, allowing for comparisons between states and territories as well as insights into fluctuations over the specified time frame. The interactive tooltip feature enhances the user experience by providing detailed information on vacancies for each state at specific quarters.</p>
+    <script type="text/javascript">
+        const spec1 = {
+    "$schema": "https://vega.github.io/schema/vega-lite/v5.json",
+    "description": "Job Vacancies in Australian States and Territories Over Time",
+    "width": 800,
+    "height": 400,
+    "data": {
+      "values": [
+        {"quarter": "Aug-19", "NSW": 72.8, "Vic": 61.2, "Qld": 39.1, "SA": 11.3, "WA": 26.4, "Tas": 3.6, "NT": 4.3, "ACT": 7.6},
+        {"quarter": "Nov-19", "NSW": 80.2, "Vic": 60.1, "Qld": 39.2, "SA": 11.4, "WA": 25.7, "Tas": 3.6, "NT": 3.5, "ACT": 7.7},
+        {"quarter": "Feb-20", "NSW": 79.3, "Vic": 59.7, "Qld": 38.4, "SA": 11.7, "WA": 27.6, "Tas": 3.4, "NT": 2.9, "ACT": 6.6},
+        {"quarter": "May-20", "NSW": 39.8, "Vic": 28.7, "Qld": 25.2, "SA": 6.8, "WA": 16.8, "Tas": 1.9, "NT": 1.7, "ACT": 3.6},
+        {"quarter": "Aug-20", "NSW": 62.2, "Vic": 45.8, "Qld": 42.1, "SA": 12.5, "WA": 32.2, "Tas": 3.4, "NT": 4.2, "ACT": 5.6},
+        {"quarter": "Nov-20", "NSW": 82.7, "Vic": 58.4, "Qld": 47.9, "SA": 15.6, "WA": 37.4, "Tas": 5.1, "NT": 4.2, "ACT": 7.9},
+        {"quarter": "Feb-21", "NSW": 94, "Vic": 65.6, "Qld": 53.5, "SA": 19.3, "WA": 40, "Tas": 5.7, "NT": 4.8, "ACT": 8.2},
+        {"quarter": "May-21", "NSW": 112.8, "Vic": 87.6, "Qld": 67.2, "SA": 21.3, "WA": 46.2, "Tas": 6.5, "NT": 5, "ACT": 8.8},
+        {"quarter": "Aug-21", "NSW": 95.2, "Vic": 81.3, "Qld": 70.6, "SA": 18, "WA": 52.1, "Tas": 5.8, "NT": 6.1, "ACT": 8},
+        {"quarter": "Nov-21", "NSW": 120.9, "Vic": 106, "Qld": 70.3, "SA": 23.7, "WA": 60.8, "Tas": 6.8, "NT": 6.2, "ACT": 9.9},
+        {"quarter": "Feb-22", "NSW": 130, "Vic": 101.8, "Qld": 76.9, "SA": 24.5, "WA": 66.5, "Tas": 7.3, "NT": 8.5, "ACT": 11.5},
+        {"quarter": "May-22", "NSW": 145.1, "Vic": 120.1, "Qld": 78.6, "SA": 24.5, "WA": 65.2, "Tas": 7.5, "NT": 7.7, "ACT": 12.3},
+        {"quarter": "Aug-22", "NSW": 150.8, "Vic": 126.6, "Qld": 85.8, "SA": 25.2, "WA": 60.7, "Tas": 6.3, "NT": 7.6, "ACT": 12},
+        {"quarter": "Nov-22", "NSW": 133, "Vic": 117.7, "Qld": 85.7, "SA": 25.3, "WA": 61.9, "Tas": 7.1, "NT": 7.5, "ACT": 12.2},
+        {"quarter": "Feb-23", "NSW": 145, "Vic": 110.8, "Qld": 85, "SA": 22.9, "WA": 52.8, "Tas": 7.7, "NT": 6.9, "ACT": 11.5},
+        {"quarter": "May-23", "NSW": 128.1, "Vic": 105.1, "Qld": 77.1, "SA": 24.9, "WA": 54.9, "Tas": 7.1, "NT": 6.3, "ACT": 11.4},
+        {"quarter": "Aug-23", "NSW": 122.4, "Vic": 99.6, "Qld": 80, "SA": 24.7, "WA": 52.5, "Tas": 6.8, "NT": 6, "ACT": 10.4},
+        {"quarter": "Nov-23", "NSW": 119.5, "Vic": 94.9, "Qld": 78.2, "SA": 24, "WA": 49.5, "Tas": 6.5, "NT": 5.2, "ACT": 8.6},
+        {"quarter": "Feb-24", "NSW": 107.6, "Vic": 91.5, "Qld": 69.5, "SA": 25.9, "WA": 47.8, "Tas": 6.8, "NT": 4.8, "ACT": 8.7},
+        {"quarter": "May-24", "NSW": 103.5, "Vic": 87.4, "Qld": 67, "SA": 21.5, "WA": 42, "Tas": 6.4, "NT": 5.5, "ACT": 8.3},
+        {"quarter": "Aug-24", "NSW": 101.4, "Vic": 82.8, "Qld": 67.5, "SA": 19.5, "WA": 41.5, "Tas": 6.1, "NT": 5.1, "ACT": 7.9}
+      ]
+    },
+    "transform": [
+      {
+        "fold": ["NSW", "Vic", "Qld", "SA", "WA", "Tas", "NT", "ACT"],
+        "as": ["State", "Vacancies"]
+      }
+    ],
+    "mark": "line",
+    "encoding": {
+      "x": {
+        "field": "quarter",
+        "type": "ordinal",
+        "title": "Quarter"
+      },
+      "y": {
+        "field": "Vacancies",
+        "type": "quantitative",
+        "title": "Job Vacancies ('000)"
+      },
+      "color": {
+        "field": "State",
+        "type": "nominal",
+        "title": "State/Territory",
+        "scale": {
+            "domain": ["NSW", "Vic", "Qld", "SA", "WA", "Tas", "NT", "ACT", "Australia", "Seasonally Adjusted", "Trend"],
+            "range": ["#1f77b4", "#ff7f0e", "#2ca02c", "#d62728", "#9467bd", "#8c564b", "#e377c2", "#7f7f7f", "#bcbd22", "#17becf", "#9edae5"]
+        }
+      },
+      "tooltip": [
+        {"field": "State", "type": "nominal"},
+        {"field": "Vacancies", "type": "quantitative"},
+        {"field":"quarter" , "type": "nominal"}
+      ]
+    }
+  };
+
+  vegaEmbed('#vis1', spec1).catch(console.error);
+  
+    </script>
+    
+    <h1>Change in Job Vacancies</h1>
+    <div id="vis"></div>
+    
+    <p>This dataset provides quarterly changes in job vacancies across various Australian states and territories from May 2023 to August 2024. Each entry lists the percentage change in job vacancies for New South Wales (NSW), Victoria (Vic), Queensland (Qld), South Australia (SA), Western Australia (WA), Tasmania (Tas), Northern Territory (NT), and the Australian Capital Territory (ACT), as well as the overall change for Australia. The data reveals fluctuations in job vacancies, with both increases and decreases observed in different states over the specified quarters. For example, while South Australia saw an increase of 8.7% in May 2023, New South Wales experienced a decline of 11.7%. The dataset also includes seasonally adjusted figures and trend values, which help to smooth out seasonal variations and provide a clearer picture of underlying trends in job vacancies.</p>
+    <script type="text/javascript">
+        const spec = {
+    "$schema": "https://vega.github.io/schema/vega-lite/v5.json",
+    "description": "Change in job vacancies, states and territories",
+    "width": 800,
+    "height": 400,
+    "data": {
+        "values": [
+            {"quarter": "May-23", "NSW": -11.7, "Vic": -5.1, "Qld": -9.3, "SA": 8.7, "WA": 4.0, "Tas": -7.6, "NT": -8.3, "ACT": -1.1, "Australia": -6.2, "Seasonally Adjusted": -3.5, "Trend": -4.4},
+            {"quarter": "Aug-23", "NSW": -4.5, "Vic": -5.2, "Qld": 3.8, "SA": -1.0, "WA": -4.3, "Tas": -4.7, "NT": -4.8, "ACT": -8.4, "Australia": -3.0, "Seasonally Adjusted": -6.1, "Trend": -4.6},
+            {"quarter": "Nov-23", "NSW": -2.3, "Vic": -4.7, "Qld": -2.2, "SA": -2.8, "WA": -5.8, "Tas": -3.6, "NT": -13.9, "ACT": -17.2, "Australia": -3.9, "Seasonally Adjusted": -3.3, "Trend": -5.0},
+            {"quarter": "Feb-24", "NSW": -10.0, "Vic": -3.6, "Qld": -11.1, "SA": 8.0, "WA": -3.3, "Tas": 4.7, "NT": -7.4, "ACT": 1.0, "Australia": -6.1, "Seasonally Adjusted": -6.3, "Trend": -4.8},
+            {"quarter": "May-24", "NSW": -3.8, "Vic": -4.4, "Qld": -3.7, "SA": -17.3, "WA": -12.3, "Tas": -6.6, "NT": 15.2, "ACT": -5.0, "Australia": -5.9, "Seasonally Adjusted": -3.5, "Trend": -4.7},
+            {"quarter": "Aug-24", "NSW": -2.0, "Vic": -5.3, "Qld": 0.9, "SA": -9.0, "WA": -1.0, "Tas": -4.1, "NT": -6.4, "ACT": -4.9, "Australia": -2.8, "Seasonally Adjusted": -5.2, "Trend": -4.6}
+        ]
+    },
+    "transform": [
+        {
+            "fold": ["NSW", "Vic", "Qld", "SA", "WA", "Tas", "NT", "ACT", "Australia", "Seasonally Adjusted", "Trend"],
+            "as": ["State", "Change"]
+        },
+        {
+            "filter": {"selection": "select"}
+        }
+    ],
+    "selection": {
+        "select": {
+            "type": "single",
+            "fields": ["State"],
+            "bind": {
+                "input": "select",
+                "options": [
+                    "NSW", "Vic", "Qld", "SA", "WA", "Tas", "NT", "ACT", "Australia", "Seasonally Adjusted", "Trend"
+                ]
+            },
+            "init": {"State": "NSW"}
+        }
+    },
+    "mark": "line",
+    "encoding": {
+        "x": {"field": "quarter", "type": "ordinal", "title": "Quarter"},
+        "y": {"field": "Change", "type": "quantitative", "title": "Change in Job Vacancies (%)"},
+        "color": {
+            "field": "State",
+            "type": "nominal",
+            "title": "State/Territory",
+            "scale": {
+                "domain": ["NSW", "Vic", "Qld", "SA", "WA", "Tas", "NT", "ACT", "Australia", "Seasonally Adjusted", "Trend"],
+                "range": ["#1f77b4", "#ff7f0e", "#2ca02c", "#d62728", "#9467bd", "#8c564b", "#e377c2", "#7f7f7f", "#bcbd22", "#17becf", "#9edae5"]
+            },
+            "legend": null  // Add this line to hide the legend
+        },
+        "tooltip": [
+            {"field": "State", "type": "nominal"},
+            {"field": "Change", "type": "quantitative"},
+            {"field": "quarter", "type": "nominal"}
+        ]
+    }
+};
+
+vegaEmbed('#vis', spec).catch(console.error);
+    </script>
+
+
+
+
+
+    <h1>[VIS 1]Global GDP Growth</h1>
+    <div id="vis2"></div>
+
+    <script>
+        const spec3 = {
+  "$schema": "https://vega.github.io/schema/vega-lite/v5.json",
+  "title": "GDP Data by Country for 2024",
+  "width": 800,
+  "height": 400,
+  "background": "#e0f7fa",
+  "projection": {"type": "equalEarth"},
+  "layer": [
+    {
+      "data": {
+        "url": "https://raw.githubusercontent.com/tedasdf/assignment/main/ne_110m.json",
+        "format": {
+          "type": "topojson",
+          "feature": "ne_110m_admin_0_countries"
+        }
+      },
+      "mark": {
+        "type": "geoshape",
+        "fill": "gray",
+        "stroke": "black"
+      },
+      "encoding": {
+        "tooltip": [
+          {"field": "properties.NAME", "type": "nominal", "title": "Country"},
+          {"field": "2024", "type": "quantitative", "title": "GDP (%)"}
+        ]
+      }
+    },
+    {
+      "data": {
+        "url": "https://raw.githubusercontent.com/FIT3179/Vega-Lite/main/3_choropleth_map/js/ne_110m_admin_0_countries.topojson",
+        "format": {
+          "type": "topojson",
+          "feature": "ne_110m_admin_0_countries"
+        }
+      },
+
+      "transform": [        
+        {
+          "lookup": "properties.NAME",
+          "from": {
+            "data": {
+              "url": "https://raw.githubusercontent.com/tedasdf/assignment/main/world_gdp_data.csv",
+              "format": {"type": "csv"}
+            },
+            "key": "country_name",
+            "fields": ["2024"]
+          }
+        },
+        {
+          "window": [
+            {"op": "min", "field": "2024", "as": "minGDP"},
+            {"op": "max", "field": "2024", "as": "maxGDP"}
+          ]
+        },
+        {
+          "calculate": "(datum['2024'] - datum['minGDP']) / (datum['maxGDP'] - datum['minGDP'])",
+          "as": "normalized_gdp"
+        }
+        
+      ],
+      "mark": {"type": "geoshape"},
+      "encoding": {
+        "color": {
+          "field": "normalized_gdp",
+          "type": "quantitative",
+          "title": "GDP (2024)",
+          "scale": {
+    "range": ["#ffcccc", "#ff0000"]
+},
+          
+          "legend": {
+            "title": "Normalized GDP (2024)",
+            "orient": "bottom-right",
+            "format": ".2f"
+          },
+          
+        },
+        "tooltip": [
+          {"field": "properties.NAME", "type": "nominal", "title": "Country"},
+          {"field": "2024", "type": "quantitative", "title": "GDP (%)"}
+        ]
+      }
+    },
+    {
+      "data": {
+        "url": "https://raw.githubusercontent.com/tedasdf/assignment/main/ne_110m.json",
+        "format": {
+          "type": "topojson",
+          "feature": "ne_110m_graticules_30"
+        }
+      },
+      "mark": {
+        "type": "geoshape",
+        "fill": null,
+        "stroke": "black"
+      }
+    }
+  ]
+};
+
+        vegaEmbed('#vis2', spec3).then(result => {
+            console.log(result);
+        }).catch(console.error);
+    </script>
+</body>
+</html>

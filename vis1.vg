@@ -1,0 +1,64 @@
+{
+    "$schema": "https://vega.github.io/schema/vega-lite/v5.json",
+    "description": "Job Vacancies in Australian States and Territories Over Time",
+    "width": 800,
+    "height": 400,
+    "data": {
+      "values": [
+        {"quarter": "Aug-19", "NSW": 72.8, "Vic": 61.2, "Qld": 39.1, "SA": 11.3, "WA": 26.4, "Tas": 3.6, "NT": 4.3, "ACT": 7.6},
+        {"quarter": "Nov-19", "NSW": 80.2, "Vic": 60.1, "Qld": 39.2, "SA": 11.4, "WA": 25.7, "Tas": 3.6, "NT": 3.5, "ACT": 7.7},
+        {"quarter": "Feb-20", "NSW": 79.3, "Vic": 59.7, "Qld": 38.4, "SA": 11.7, "WA": 27.6, "Tas": 3.4, "NT": 2.9, "ACT": 6.6},
+        {"quarter": "May-20", "NSW": 39.8, "Vic": 28.7, "Qld": 25.2, "SA": 6.8, "WA": 16.8, "Tas": 1.9, "NT": 1.7, "ACT": 3.6},
+        {"quarter": "Aug-20", "NSW": 62.2, "Vic": 45.8, "Qld": 42.1, "SA": 12.5, "WA": 32.2, "Tas": 3.4, "NT": 4.2, "ACT": 5.6},
+        {"quarter": "Nov-20", "NSW": 82.7, "Vic": 58.4, "Qld": 47.9, "SA": 15.6, "WA": 37.4, "Tas": 5.1, "NT": 4.2, "ACT": 7.9},
+        {"quarter": "Feb-21", "NSW": 94, "Vic": 65.6, "Qld": 53.5, "SA": 19.3, "WA": 40, "Tas": 5.7, "NT": 4.8, "ACT": 8.2},
+        {"quarter": "May-21", "NSW": 112.8, "Vic": 87.6, "Qld": 67.2, "SA": 21.3, "WA": 46.2, "Tas": 6.5, "NT": 5, "ACT": 8.8},
+        {"quarter": "Aug-21", "NSW": 95.2, "Vic": 81.3, "Qld": 70.6, "SA": 18, "WA": 52.1, "Tas": 5.8, "NT": 6.1, "ACT": 8},
+        {"quarter": "Nov-21", "NSW": 120.9, "Vic": 106, "Qld": 70.3, "SA": 23.7, "WA": 60.8, "Tas": 6.8, "NT": 6.2, "ACT": 9.9},
+        {"quarter": "Feb-22", "NSW": 130, "Vic": 101.8, "Qld": 76.9, "SA": 24.5, "WA": 66.5, "Tas": 7.3, "NT": 8.5, "ACT": 11.5},
+        {"quarter": "May-22", "NSW": 145.1, "Vic": 120.1, "Qld": 78.6, "SA": 24.5, "WA": 65.2, "Tas": 7.5, "NT": 7.7, "ACT": 12.3},
+        {"quarter": "Aug-22", "NSW": 150.8, "Vic": 126.6, "Qld": 85.8, "SA": 25.2, "WA": 60.7, "Tas": 6.3, "NT": 7.6, "ACT": 12},
+        {"quarter": "Nov-22", "NSW": 133, "Vic": 117.7, "Qld": 85.7, "SA": 25.3, "WA": 61.9, "Tas": 7.1, "NT": 7.5, "ACT": 12.2},
+        {"quarter": "Feb-23", "NSW": 145, "Vic": 110.8, "Qld": 85, "SA": 22.9, "WA": 52.8, "Tas": 7.7, "NT": 6.9, "ACT": 11.5},
+        {"quarter": "May-23", "NSW": 128.1, "Vic": 105.1, "Qld": 77.1, "SA": 24.9, "WA": 54.9, "Tas": 7.1, "NT": 6.3, "ACT": 11.4},
+        {"quarter": "Aug-23", "NSW": 122.4, "Vic": 99.6, "Qld": 80, "SA": 24.7, "WA": 52.5, "Tas": 6.8, "NT": 6, "ACT": 10.4},
+        {"quarter": "Nov-23", "NSW": 119.5, "Vic": 94.9, "Qld": 78.2, "SA": 24, "WA": 49.5, "Tas": 6.5, "NT": 5.2, "ACT": 8.6},
+        {"quarter": "Feb-24", "NSW": 107.6, "Vic": 91.5, "Qld": 69.5, "SA": 25.9, "WA": 47.8, "Tas": 6.8, "NT": 4.8, "ACT": 8.7},
+        {"quarter": "May-24", "NSW": 103.5, "Vic": 87.4, "Qld": 67, "SA": 21.5, "WA": 42, "Tas": 6.4, "NT": 5.5, "ACT": 8.3},
+        {"quarter": "Aug-24", "NSW": 101.4, "Vic": 82.8, "Qld": 67.5, "SA": 19.5, "WA": 41.5, "Tas": 6.1, "NT": 5.1, "ACT": 7.9}
+      ]
+    },
+    "transform": [
+      {
+        "fold": ["NSW", "Vic", "Qld", "SA", "WA", "Tas", "NT", "ACT"],
+        "as": ["State", "Vacancies"]
+      }
+    ],
+    "mark": "line",
+    "encoding": {
+      "x": {
+        "field": "quarter",
+        "type": "ordinal",
+        "title": "Quarter"
+      },
+      "y": {
+        "field": "Vacancies",
+        "type": "quantitative",
+        "title": "Job Vacancies ('000)"
+      },
+      "color": {
+        "field": "State",
+        "type": "nominal",
+        "title": "State/Territory",
+        "scale": {
+          "domain": ["NSW", "Vic", "Qld", "SA", "WA", "Tas", "NT", "ACT"],
+          "range": ["#1f77b4", "#ff7f0e", "#2ca02c", "#d62728", "#9467bd", "#8c564b", "#e377c2", "#7f7f7f"]
+        }
+      },
+      "tooltip": [
+        {"field": "State", "type": "nominal"},
+        {"field": "Vacancies", "type": "quantitative"}
+      ]
+    }
+  }
+  

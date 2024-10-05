@@ -1,0 +1,58 @@
+{
+    "$schema": "https://vega.github.io/schema/vega-lite/v5.json",
+    "description": "Change in job vacancies, states and territories",
+    "width": 800,
+    "height": 400,
+    "data": {
+      "values": [
+        {"quarter": "May-23", "NSW": -11.7, "Vic": -5.1, "Qld": -9.3, "SA": 8.7, "WA": 4.0, "Tas": -7.6, "NT": -8.3, "ACT": -1.1, "Australia": -6.2, "Seasonally Adjusted": -3.5, "Trend": -4.4},
+        {"quarter": "Aug-23", "NSW": -4.5, "Vic": -5.2, "Qld": 3.8, "SA": -1.0, "WA": -4.3, "Tas": -4.7, "NT": -4.8, "ACT": -8.4, "Australia": -3.0, "Seasonally Adjusted": -6.1, "Trend": -4.6},
+        {"quarter": "Nov-23", "NSW": -2.3, "Vic": -4.7, "Qld": -2.2, "SA": -2.8, "WA": -5.8, "Tas": -3.6, "NT": -13.9, "ACT": -17.2, "Australia": -3.9, "Seasonally Adjusted": -3.3, "Trend": -5.0},
+        {"quarter": "Feb-24", "NSW": -10.0, "Vic": -3.6, "Qld": -11.1, "SA": 8.0, "WA": -3.3, "Tas": 4.7, "NT": -7.4, "ACT": 1.0, "Australia": -6.1, "Seasonally Adjusted": -6.3, "Trend": -4.8},
+        {"quarter": "May-24", "NSW": -3.8, "Vic": -4.4, "Qld": -3.7, "SA": -17.3, "WA": -12.3, "Tas": -6.6, "NT": 15.2, "ACT": -5.0, "Australia": -5.9, "Seasonally Adjusted": -3.5, "Trend": -4.7},
+        {"quarter": "Aug-24", "NSW": -2.0, "Vic": -5.3, "Qld": 0.9, "SA": -9.0, "WA": -1.0, "Tas": -4.1, "NT": -6.4, "ACT": -4.9, "Australia": -2.8, "Seasonally Adjusted": -5.2, "Trend": -4.6}
+      ]
+    },
+    "transform": [
+      {
+        "fold": ["NSW", "Vic", "Qld", "SA", "WA", "Tas", "NT", "ACT", "Australia", "Seasonally Adjusted", "Trend"],
+        "as": ["State", "Change"]
+      }
+    ],
+    "selection": {
+      "stateSelect": {
+        "type": "single",
+        "fields": ["State"],
+        "bind": {
+          "input": "select",
+          "options": [
+            "NSW", "Vic", "Qld", "SA", "WA", "Tas", "NT", "ACT", "Australia", "Seasonally Adjusted", "Trend"
+          ]
+        },
+        "init": {"State": "NSW"}
+      }
+    },
+    "mark": "line",
+    "encoding": {
+      "x": {"field": "quarter", "type": "ordinal", "title": "Quarter"},
+      "y": {"field": "Change", "type": "quantitative", "title": "Change in Job Vacancies (%)"},
+      "color": {
+        "condition": {
+          "selection": "stateSelect",
+          "field": "State", 
+          "type": "nominal", 
+          "title": "State/Territory",
+          "scale": {
+            "domain": ["NSW", "Vic", "Qld", "SA", "WA", "Tas", "NT", "ACT", "Australia", "Seasonally Adjusted", "Trend"],
+            "range": ["#1f77b4", "#ff7f0e", "#2ca02c", "#d62728", "#9467bd", "#8c564b", "#e377c2", "#7f7f7f", "#bcbd22", "#17becf", "#9edae5"]
+          }
+        },
+        "value": "#cccccc"
+      },
+      "tooltip": [
+        {"field": "State", "type": "nominal"},
+        {"field": "Change", "type": "quantitative"}
+      ]
+    }
+  }
+  
