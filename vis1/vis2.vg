@@ -2,16 +2,9 @@
     "$schema": "https://vega.github.io/schema/vega-lite/v5.json",
     "description": "Stacked Bar Chart for Final Consumption Expenditure by Category",
     "data": {
-      "values": [
-        {"category": "Household", "year": 2020, "expenditure": 1000},
-        {"category": "NPISHs", "year": 2020, "expenditure": 200},
-        {"category": "Government Individual", "year": 2020, "expenditure": 500},
-        {"category": "Government Collective", "year": 2020, "expenditure": 300},
-        {"category": "Household", "year": 2021, "expenditure": 1200},
-        {"category": "NPISHs", "year": 2021, "expenditure": 250},
-        {"category": "Government Individual", "year": 2021, "expenditure": 550},
-        {"category": "Government Collective", "year": 2021, "expenditure": 320}
-      ]
+      "url": "https://raw.githubusercontent.com/tedasdf/assignment/main/world_gdp_data.csv",
+      https://raw.githubusercontent.com/tedasdf/assignment2/blob/main/vis1/final_conumption_expenditure.csv
+      "format": {"type": "csv"}
     },
     "mark": "bar",
     "encoding": {
