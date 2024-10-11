@@ -1,0 +1,29 @@
+
+
+{
+  "$schema": "https://vega.github.io/schema/vega-lite/v5.json",
+  "data": {
+    "url": "https://raw.githubusercontent.com/tedasdf/assignment2/refs/heads/main/csv_file/GDP_INF_UNE_DEBT_RATE.csv",
+    "format": {
+      "type": "csv"
+    }
+  },
+  "mark": "line",
+  "encoding": {
+    "x": {
+      "field": "Year",
+      "type": "quantitative",
+      "title": "Year"
+    },
+    "y": {
+      "field": "GDP growth (real)",
+      "type": "quantitative",
+      "title": "GDP Growth (Real)"
+    },
+    "tooltip": [
+      {"field": "Year", "type": "quantitative"},
+      {"field": "GDP growth (real)", "type": "quantitative"}
+    ]
+  },
+  "title": "GDP Growth Over the Years"
+}

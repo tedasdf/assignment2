@@ -77,7 +77,7 @@ a:hover {
 </head>
 <body>
     <h1></h1>
-    <div id="vis">March 2019</div>
+    <div id="vis10">March 2019</div>
 
     <script type="text/javascript">
       const spec = {
@@ -110,11 +110,150 @@ a:hover {
             }
         };
 
-        vegaEmbed('#vis', spec);
+        vegaEmbed('#vis10', spec);
 
   </script>
   
+  <h1></h1>
+  <div id="visGDPnominalandPPP">GDP nominal and PPP</div>
 
+  <script type="text/javascript">
+    const specvisGDPnominalandPPP = {
+  "$schema": "https://vega.github.io/schema/vega-lite/v5.json",
+  "data": {
+    "url": "https://raw.githubusercontent.com/tedasdf/assignment2/refs/heads/main/csv_file/GDP_INF_UNE_DEBT_RATE.csv",
+    "format": {
+      "type": "csv"
+    }
+  },
+  "transform": [
+    {
+      "fold": ["GDP(in billion USDPPP)", "GDP (in billion USDnominal)"],
+      "as": ["GDP Type", "Value"]
+    }
+  ],
+  "layer": [
+    {
+      "mark": "line",
+      "encoding": {
+        "x": {
+          "field": "Year",
+          "type": "temporal",
+          "title": "Year"
+        },
+        "y": {
+          "field": "Value",
+          "type": "quantitative",
+          "title": "GDP (in billion)",
+          "axis": {"titleColor": "#1f77b4"}
+        },
+        "color": {
+          "field": "GDP Type",
+          "type": "nominal",
+          "scale": {
+            "domain": [
+              "GDP(in billion USDPPP)",
+              "GDP (in billion USDnominal)"
+            ],
+            "range": ["#1f77b4", "#ff7f0e"]
+          },
+          "legend": {
+            "title": "GDP Type"
+          }
+        }
+      }
+    }
+  ],
+  "resolve": {"scale": {"y": "shared"}},
+  "title": "Comparison of GDP (PPP) and GDP (Nominal) Over the Years",
+  "width": 800,
+  "height": 400
+};
+
+      vegaEmbed('#visGDPnominalandPPP', specvisGDPnominalandPPP);
+
+  </script>'
+  
+  <h1></h1>
+  <div id="visGDPinfl">GDP nominal and PPP</div>
+
+  <script type="text/javascript">
+    const specvisGDPinfl = {
+  "$schema": "https://vega.github.io/schema/vega-lite/v5.json",
+  "hconcat": [
+
+    {
+      "data": {
+        "url": "https://raw.githubusercontent.com/tedasdf/assignment2/refs/heads/main/csv_file/GDP_INF_UNE_DEBT_RATE.csv",
+        "format": {
+          "type": "csv"
+        }
+      },
+      "mark": "point",
+      "encoding": {
+        "x": {
+          "field": "GDP growth (real)",
+          "type": "quantitative",
+          "title": "GDP Growth (Real)"
+        },
+        "y": {
+          "field": "Inflation rate(in percent)",
+          "type": "quantitative",
+          "title": "Inflation Rate (%)"
+        }
+      },
+      "title": "Correlation between GDP Growth and Inflation Rate"
+    },
+    {
+      "data": {
+        "url": "https://raw.githubusercontent.com/tedasdf/assignment2/refs/heads/main/csv_file/GDP_INF_UNE_DEBT_RATE.csv",
+        "format": {
+          "type": "csv"
+        }
+      },
+      "mark": "point",
+      "encoding": {
+        "x": {
+          "field": "GDP growth (real)",
+          "type": "quantitative",
+          "title": "GDP Growth (Real)"
+        },
+        "y": {
+          "field": "Unemployment (in percent)",
+          "type": "quantitative",
+          "title": "Unemployment Rate (%)"
+        }
+      },
+      "title": "Correlation between GDP Growth and Unemployment Rate"
+    },
+    {
+      "data": {
+        "url": "https://raw.githubusercontent.com/tedasdf/assignment2/refs/heads/main/csv_file/GDP_INF_UNE_DEBT_RATE.csv",
+        "format": {
+          "type": "csv"
+        }
+      },
+      "mark": "point",
+      "encoding": {
+        "x": {
+          "field": "GDP growth (real)",
+          "type": "quantitative",
+          "title": "GDP Growth (Real)"
+        },
+        "y": {
+          "field": "Government debt(in percen of GDP)",
+          "type": "quantitative",
+          "title": "Government Debt (% of GDP)"
+        }
+      },
+      "title": "Correlation between GDP Growth and Government Debt (% of GDP)"
+    }
+  ]
+};
+
+      vegaEmbed('#visGDPinfl', specvisGDPinfl);
+
+  </script>
 
     <!-- <p>The first visualization presents a line chart illustrating job vacancies across various Australian states and territories over time, specifically from August 2019 to August 2024. Each line represents a different state, including New South Wales (NSW), Victoria (Vic), Queensland (Qld), South Australia (SA), Western Australia (WA), Tasmania (Tas), Northern Territory (NT), and the Australian Capital Territory (ACT). The x-axis displays the quarters, while the y-axis quantifies job vacancies in thousands. This visualization effectively highlights trends in job vacancies, allowing for comparisons between states and territories as well as insights into fluctuations over the specified time frame. The interactive tooltip feature enhances the user experience by providing detailed information on vacancies for each state at specific quarters.</p>
     <script type="text/javascript">
