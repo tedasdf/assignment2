@@ -254,7 +254,66 @@ a:hover {
       vegaEmbed('#visGDPinfl', specvisGDPinfl);
 
   </script>
+  
 
+  <h1></h1>
+  <div id="visGSP">GDP nominal and PPP</div>
+
+  <script type="text/javascript">
+    const specvisGSP = {
+  "$schema": "https://vega.github.io/schema/vega-lite/v5.json",
+  "data": {
+    "url": "https://raw.githubusercontent.com/tedasdf/assignment2/refs/heads/main/csv_file/Gross%20state%20product-%20Chain%20volume%20measures%20in%20millions.csv",
+    "format": {
+      "type": "csv"
+    }
+  },
+  "transform": [
+    {
+      "fold": [
+        "New South Wales",
+        "Victoria",
+        "Queensland",
+        "South Australia",
+        "Western Australia",
+        "Tasmania",
+        "Northern Territory",
+        "Australian Capital Territory"
+      ],
+      "as": ["State", "GSP"] 
+    }
+  ],
+  "mark": "area",
+  "encoding": {
+    "x": {
+      "field": "Year",
+      "type": "temporal",
+      "title": "Year",
+      "axis": {
+        "format": "%Y"
+      }
+    },
+    "y": {
+      "field": "GSP",
+      "type": "quantitative",
+      "title": "Gross State Product (in millions AUD)"
+    },
+    "color": {
+      "field": "State",
+      "type": "nominal",
+      "title": "State"
+    },
+    "tooltip": [
+      {"field": "State", "type": "nominal", "title": "State"},
+      {"field": "Year", "type": "temporal", "title": "Year"},
+      {"field": "GSP", "type": "quantitative", "title": "Gross State Product (in millions AUD)"}
+    ]
+  }
+};
+
+      vegaEmbed('#visGSP', specvisGSP);
+
+  </script>
     <!-- <p>The first visualization presents a line chart illustrating job vacancies across various Australian states and territories over time, specifically from August 2019 to August 2024. Each line represents a different state, including New South Wales (NSW), Victoria (Vic), Queensland (Qld), South Australia (SA), Western Australia (WA), Tasmania (Tas), Northern Territory (NT), and the Australian Capital Territory (ACT). The x-axis displays the quarters, while the y-axis quantifies job vacancies in thousands. This visualization effectively highlights trends in job vacancies, allowing for comparisons between states and territories as well as insights into fluctuations over the specified time frame. The interactive tooltip feature enhances the user experience by providing detailed information on vacancies for each state at specific quarters.</p>
     <script type="text/javascript">
         const spec1 = {
