@@ -1,5 +1,4 @@
-﻿,GDP,GDP per capita,GDP,GDP per capita,GDP growth,Inflation rate,Unemployment,Government debt,,
-Year,(in bil. US$PPP),(in US$PPP),(in bil. US$nominal),(in US$ nominal),(real),(in percent),(in percent),(in % of GDP),,"source: https://www.imf.org/en/Publications/WEO/weo-database/2022/October/weo-report?c=193,&s=NGDP_RPCH,NGDPD,PPPGDP,NGDPDPC,PPPPC,PCPIPCH,LUR,GGXWDG_NGDP,&sy=1980&ey=2027&ssm=0&scsm=1&scc=0&ssd=1&ssc=0&sic=0&sort=country&ds=.&br=1"
+﻿Year,GDP(in bil. US$PPP),GDP per capita(in US$PPP),GDP (in bil. US$nominal),GDP per capita(in US$ nominal),GDP growth (real),Inflation rate(in percent),Unemployment (in percent),Government debt(in % of GDP),,"source: https://www.imf.org/en/Publications/WEO/weo-database/2022/October/weo-report?c=193,&s=NGDP_RPCH,NGDPD,PPPGDP,NGDPDPC,PPPPC,PCPIPCH,LUR,GGXWDG_NGDP,&sy=1980&ey=2027&ssm=0&scsm=1&scc=0&ssd=1&ssc=0&sic=0&sort=country&ds=.&br=1"
 1980,155.4,10498,162.8,11000.1,0.029,0.101,0.061,n/a,,
 1981,177.1,11776.5,188.3,12520,0.041,0.095,0.058,n/a,,
 1982,188.2,12307.7,186.9,12226.6,0.001,0.114,0.072,n/a,,
