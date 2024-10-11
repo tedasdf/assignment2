@@ -76,10 +76,47 @@ a:hover {
     </style>
 </head>
 <body>
-    <h1>Job vacancies, states and territories</h1>
-    <div id="vis1"></div>
+    <h1></h1>
+    <div id="vis">March 2019</div>
 
-    <p>The first visualization presents a line chart illustrating job vacancies across various Australian states and territories over time, specifically from August 2019 to August 2024. Each line represents a different state, including New South Wales (NSW), Victoria (Vic), Queensland (Qld), South Australia (SA), Western Australia (WA), Tasmania (Tas), Northern Territory (NT), and the Australian Capital Territory (ACT). The x-axis displays the quarters, while the y-axis quantifies job vacancies in thousands. This visualization effectively highlights trends in job vacancies, allowing for comparisons between states and territories as well as insights into fluctuations over the specified time frame. The interactive tooltip feature enhances the user experience by providing detailed information on vacancies for each state at specific quarters.</p>
+    <script type="text/javascript">
+      const spec = {
+            "$schema": "https://vega.github.io/schema/vega-lite/v5.json",
+            "description": "A pie chart showing GDP contribution by industry.",
+            "data": {
+                "url": "https://raw.githubusercontent.com/tedasdf/assignment2/refs/heads/main/csv_file/GDPcontributionbyindustry.csv",
+                "format": {
+                    "type": "csv"
+                }
+            },
+            "mark": "arc",
+            "encoding": {
+                "theta": {
+                    "field": "$ Millions",
+                    "type": "quantitative"
+                },
+                "color": {
+                    "field": "Sector",
+                    "type": "nominal",
+                    "legend": {
+                        "title": "Industry"
+                    }
+                },
+                "tooltip": [
+                    {"field": "Sector", "type": "nominal", "title": "Industry"},
+                    {"field": "$ Millions", "type": "quantitative", "title": "Contribution ($ Millions)", "format": ".3s"},
+                    {"field": "Percentage changes", "type": "quantitative", "title": "Percentage changes(%))"}
+                ]
+            }
+        };
+
+        vegaEmbed('#vis', spec);
+
+  </script>
+  
+
+
+    <!-- <p>The first visualization presents a line chart illustrating job vacancies across various Australian states and territories over time, specifically from August 2019 to August 2024. Each line represents a different state, including New South Wales (NSW), Victoria (Vic), Queensland (Qld), South Australia (SA), Western Australia (WA), Tasmania (Tas), Northern Territory (NT), and the Australian Capital Territory (ACT). The x-axis displays the quarters, while the y-axis quantifies job vacancies in thousands. This visualization effectively highlights trends in job vacancies, allowing for comparisons between states and territories as well as insights into fluctuations over the specified time frame. The interactive tooltip feature enhances the user experience by providing detailed information on vacancies for each state at specific quarters.</p>
     <script type="text/javascript">
         const spec1 = {
     "$schema": "https://vega.github.io/schema/vega-lite/v5.json",
@@ -329,6 +366,6 @@ vegaEmbed('#vis', spec).catch(console.error);
         vegaEmbed('#vis2', spec3).then(result => {
             console.log(result);
         }).catch(console.error);
-    </script>
+    </script> -->
 </body>
 </html>

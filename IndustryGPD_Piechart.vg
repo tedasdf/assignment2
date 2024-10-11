@@ -1,0 +1,29 @@
+{
+            "$schema": "https://vega.github.io/schema/vega-lite/v5.json",
+            "description": "A pie chart showing GDP contribution by industry.",
+            "data": {
+                "url": "https://raw.githubusercontent.com/tedasdf/assignment2/refs/heads/main/csv_file/GDPcontributionbyindustry.csv",
+                "format": {
+                    "type": "csv"
+                }
+            },
+            "mark": "arc",
+            "encoding": {
+                "theta": {
+                    "field": "$ Millions",
+                    "type": "quantitative"
+                },
+                "color": {
+                    "field": "Sector",
+                    "type": "nominal",
+                    "legend": {
+                        "title": "Industry"
+                    }
+                },
+                "tooltip": [
+                    {"field": "Sector", "type": "nominal", "title": "Industry"},
+                    {"field": "$ Millions", "type": "quantitative", "title": "Contribution ($ Millions)", "format": ".3s"},
+                    {"field": "Percentage changes", "type": "quantitative", "title": "Percentage changes(%))"}
+                ]
+            }
+        } 
