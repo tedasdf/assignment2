@@ -1,0 +1,114 @@
+{
+  "$schema": "https://vega.github.io/schema/vega-lite/v5.json",
+  "hconcat": [
+    {
+      "data": {
+        "url": "https://raw.githubusercontent.com/tedasdf/assignment2/refs/heads/main/csv_file/different%20state%20contribution%20to%20GSP%20by%20Industry%20vs%20Australia.csv",
+        "format": {
+          "type": "csv"
+        }
+      },
+      "transform": [
+        {
+          "fold": ["NSW", "VIC", "QLD", "SA", "WA", "TAS", "NT", "ACT", "Aust"],
+          "as": ["State", "Contribution"]
+        },
+        {
+          "filter": {
+            "param": "select"
+          }
+        }
+      ],
+      "selection": {
+        "select": {
+          "type": "single",
+          "fields": ["State"],
+          "bind": {
+            "input": "select",
+            "options": ["NSW", "VIC", "QLD", "SA", "WA", "TAS", "NT", "ACT", "Aust"]
+          },
+          "init": {"State": "NSW"}
+        }
+      },
+      "mark": {
+        "type": "bar",
+        "opacity": 1
+      },
+      "encoding": {
+        "y": {
+          "field": "industry",
+          "type": "nominal",
+          "title": "Industry",
+          "sort": null
+        },
+        "x": {
+          "field": "Contribution",
+          "type": "quantitative",
+          "title": "Contribution to GSP (ppt)",
+          "scale": {
+            "domain": [-2, 2]
+          }
+        },
+        "color": {
+          "field": "State",
+          "type": "nominal",
+          "title": "State",
+          "legend": null
+        },
+        "tooltip": [
+          {"field": "industry", "type": "nominal", "title": "Industry"},
+          {"field": "Contribution", "type": "quantitative", "title": "Contribution (ppt)"}
+        ]
+      },
+      "title": "Contribution of Industries to GSP by Selected States"
+    },
+    {
+      "data": {
+        "url": "https://raw.githubusercontent.com/tedasdf/assignment2/refs/heads/main/csv_file/different%20state%20contribution%20to%20GSP%20by%20Industry%20vs%20Australia.csv",
+        "format": {
+          "type": "csv"
+        }
+      },
+      "transform": [
+        {
+          "fold": ["Aust"],
+          "as": ["State", "Contribution"]
+        },
+        {
+          "filter": {
+            "field": "State",
+            "equal": "Aust" // Ensure we only show Aust
+          }
+        }
+      ],
+      "mark": {
+        "type": "bar",
+        "opacity": 1
+      },
+      "encoding": {
+        "y": {
+          "field": "industry",
+          "type": "nominal",
+          "title": "Industry",
+          "sort": null
+        },
+        "x": {
+          "field": "Contribution",
+          "type": "quantitative",
+          "title": "Contribution to GSP (ppt)",
+          "scale": {
+            "domain": [-2, 2]
+          }
+        },
+        "color": {
+          "value": "#1f77b4"
+        },
+        "tooltip": [
+          {"field": "industry", "type": "nominal", "title": "Industry"},
+          {"field": "Contribution", "type": "quantitative", "title": "Contribution (ppt)"}
+        ]
+      },
+      "title": "Total Contribution of Industries in Australia"
+    }
+  ]
+}
