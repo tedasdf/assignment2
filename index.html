@@ -3,181 +3,289 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Vega-Lite Visualization</title>
-    <script src="https://cdn.jsdelivr.net/npm/vega@5"></script>
-    <script src="https://cdn.jsdelivr.net/npm/vega-lite@5"></script>
-    <script src="https://cdn.jsdelivr.net/npm/vega-embed@6"></script>
+    <title>Australia GDP and Economic Indicators</title>
+    
+    <!-- Include Vega and Vega-Lite -->
+    <script src="https://cdn.jsdelivr.net/npm/vega@5.20.2"></script>
+    <script src="https://cdn.jsdelivr.net/npm/vega-lite@5.7.0"></script>
+    <script src="https://cdn.jsdelivr.net/npm/vega-embed@6.24.0"></script>
+    
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.7.1/leaflet.css" />
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.7.1/leaflet.js"></script>
+    
     <style>
-        #vis , #vis1 {
-            width: 800px;
-            height: 400px;
+        body {
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 0;
+            background-color: #f9f9f9; /* Light background for contrast */
         }
-        /* Basic Text Styles */
-body {
-    font-family: Arial, sans-serif; /* Change font family */
-    font-size: 16px; /* Base font size */
-    color: #333; /* Text color */
-    line-height: 1.5; /* Line height */
-    padding: auto;
-    margin: 0 16rem;
-}
+        header {
+            background-color: #4CAF50;
+            color: white;
+            text-align: center;
+            padding: 20px 0; /* Increased padding for a more balanced header */
+        }
+        .container {
+            padding: 40px; /* Increased padding for the main content */
+            max-width: 1200px; /* Set a maximum width for better layout */
+            margin: auto; /* Center the container */
+            background: white; /* White background for content area */
+            border-radius: 8px; /* Rounded corners for a modern look */
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1); /* Subtle shadow for depth */
+        }
+        h2 {
+            color: #333; /* Darker color for headings for better readability */
+            margin-top: 30px; /* Spacing between sections */
+            margin-bottom: 15px; /* Spacing below headings */
+            text-align: center; /* Center the text */
+        }
 
-/* Headings */
-h1 {
-    font-size: 2.5em; /* Font size for h1 */
-    color: #1f77b4; /* Color for h1 */
-    font-weight: bold; /* Bold text */
-    margin-bottom: 10px; /* Space below heading */
-}
+        .chart-container {
+            width: 100%;
+            height: auto;
+            margin-bottom: 10px; /* Adjusted margin for better spacing */
+        }
+        .map-container {
+            width: 100%;
+            height: auto;
+            margin-bottom: 10px; /* Adjusted margin for better spacing */
+        }
+        footer {
+            text-align: center;
+            margin: 20px 0;
+            color: #777; /* Lighter color for footer text */
+        }
 
-h2 {
-    font-size: 2em; /* Font size for h2 */
-    color: #ff7f0e; /* Color for h2 */
-    margin-bottom: 8px; /* Space below heading */
-}
+        .gdp-indicators {
+            display: flex;             /* Enable flexbox layout */
+            flex-wrap: wrap;          /* Allow wrapping to new lines */
+            gap: 35px;                /* Space between each indicator */
+        }
 
-/* Paragraphs */
-p {
-    font-size: 1em; /* Font size for paragraphs */
-    color: #666; /* Color for paragraph text */
-    margin-bottom: 15px; /* Space below paragraphs */
-}
+        .indicator {
+            display: flex;                /* Enable flexbox for individual indicators */
+            flex-direction: column;       /* Stack items vertically */
+            align-items: flex-start;      /* Align items at the start */
+            gap: 10px;                   /* Space between heading and paragraph */
+            flex: 1 0 300px;             /* Allow flexibility, with a minimum width */
+            max-width: 400px;            /* Set a maximum width for each indicator */
+        }
 
-/* Links */
-a {
-    color: #007bff; /* Link color */
-    text-decoration: none; /* Remove underline */
-}
 
-a:hover {
-    text-decoration: underline; /* Underline on hover */
-}
+        .indicator h3 {
+            margin: 0;               /* Remove default margin */
+            flex: 0 0 auto;          /* Prevent heading from growing */
+        }
 
-/* Custom Class for Dropdown Label */
-.dropdown-label {
-    font-weight: bold; /* Make the label bold */
-    font-size: 1em; /* Set font size */
-    color: #333; /* Set label color */
-    margin-right: 8px; /* Space between label and dropdown */
-}
+        .indicator p {
+            margin: 0;               /* Remove default margin */
+            flex: 1;                 /* Allow paragraph to grow */
+        }
 
-/* Custom Class for Button Text */
-.button {
-    font-size: 1em; /* Font size for buttons */
-    font-weight: bold; /* Bold text */
-    color: white; /* Text color */
-    background-color: #28a745; /* Button background color */
-    padding: 10px 20px; /* Button padding */
-    border: none; /* Remove border */
-    border-radius: 4px; 
-    cursor: pointer; 
-}
+        .chart-container {
+            display: flex; /* Enable flexbox layout */
+            align-items: flex-start; /* Align items at the start vertically */
+            gap: 100px; /* Add space between the chart and description */
+        }
 
+        .chart {
+            flex: 1; /* Allow the chart to grow */
+            max-width: 400px; /* Set a maximum width for the chart */
+        }
+
+        .chart-description {
+            flex: 2; /* Allow the description to grow more than the chart */
+            max-width: 600px; /* Set a maximum width for the description */
+        }
+
+
+        /* Responsive design */
+        @media (max-width: 600px) {
+            .container {
+                padding: 20px; /* Less padding on small screens */
+            }
+            h2 {
+                font-size: 1.5em; /* Smaller headings on small screens */
+            }
+        }
     </style>
 </head>
 <body>
-    <h1></h1>
-    <div id="vis10">March 2019</div>
 
-    <script type="text/javascript">
-      const spec = {
-            "$schema": "https://vega.github.io/schema/vega-lite/v5.json",
-            "description": "A pie chart showing GDP contribution by industry.",
-            "data": {
-                "url": "https://raw.githubusercontent.com/tedasdf/assignment2/refs/heads/main/csv_file/GDPcontributionbyindustry.csv",
-                "format": {
-                    "type": "csv"
-                }
-            },
-            "mark": "arc",
-            "encoding": {
-                "theta": {
-                    "field": "$ Millions",
-                    "type": "quantitative"
-                },
-                "color": {
-                    "field": "Sector",
-                    "type": "nominal",
-                    "legend": {
-                        "title": "Industry"
-                    }
-                },
-                "tooltip": [
-                    {"field": "Sector", "type": "nominal", "title": "Industry"},
-                    {"field": "$ Millions", "type": "quantitative", "title": "Contribution ($ Millions)", "format": ".3s"},
-                    {"field": "Percentage changes", "type": "quantitative", "title": "Percentage changes(%))"}
-                ]
-            }
-        };
+<header>
+    <h1>Australia's GDP and Economic Indicators</h1>
+</header>
 
-        vegaEmbed('#vis10', spec);
+<div class="container">
+    <div class="introduction">
+        <h2>Introduction</h2>
+        <p>
+            Welcome to our exploration of the intricate relationships between economic indicators such as GDP growth, inflation rates, unemployment rates, and government debt. This analysis is targeted at economists, students, and policy makers who are keen to understand how these variables interact within the broader economic landscape. 
+        </p>
+        <p>
+            The aim of this page is to provide insights into the dynamics of economic growth and the factors that influence it. We will delve into how GDP growth is affected by inflation and unemployment, and examine the complexities of government debt's impact on economic performance. 
+        </p>
+        <p>
+            Our approach involves using historical data and graphical representations to illustrate these relationships clearly. By breaking down these concepts, we hope to enhance understanding and inform better economic decision-making.
+        </p>
+    </div>
+    
 
-  </script>
-  
-  <h1></h1>
-  <div id="visGDPnominalandPPP">GDP nominal and PPP</div>
+    <!-- GDP (PPP) and GDP (Nominal) -->
+    <h2>Australia GDP (PPP) and GDP (Nominal) from 1982 to 2027</h2>
+    <div id="gdp-line-chart" class="chart-container"></div>
+    <p>
+        The provided dataset outlines the economic indicators for a country spanning from 1980 to 2027. Over these years, the GDP (in both purchasing power parity and nominal terms) exhibits a generally upward trend, indicating steady economic growth. For instance, GDP grew from approximately $155.4 billion in 1980 to an estimated $1,997.8 billion by 2027. The GDP per capita has also increased significantly, reflecting improvements in living standards, moving from around $10,498 in 1980 to approximately $72,358 by 2027. However, fluctuations in GDP growth rates can be observed, particularly during economic downturns, such as in 2020 when a contraction of -2.1% occurred, possibly due to external shocks like the COVID-19 pandemic. The inflation rates and unemployment figures also show varying trends throughout this period, affecting overall economic stability. As we move to analyze the correlation between GDP growth and other economic indicators, it will be important to assess how factors such as inflation, unemployment, and government debt interact with GDP performance over time.
+    </p>
 
-  <script type="text/javascript">
+    <!-- Correlation Dot Plot: GDP growth vs Unemployment, Inflation, Government Debt -->
+    <h2>Correlation between GDP Growth and Other Economic Indicators</h2>
+    <div id="correlation-dot-plot" class="chart-container"></div>
+    <div class="gdp-indicators">
+        <div class="indicator">
+            <h3>GDP Growth and Inflation Rate</h3>
+            <p>The data suggests that usually low inflation rates, typically kept around 0.2% to 4%, are often associated with moderate economic growth, where GDP increases by about 0.2% to 0.4%. This implies a trend where controlled inflation rates are conducive to steady growth. However, this balance may indicate that economies try to maintain inflation at manageable levels to prevent adverse effects on growth. High inflation tends to create economic instability, which may stifle growth, while low inflation can encourage sustainable development. The example aligns with the broader economic understanding that moderate inflation supports healthy GDP growth.</p>
+        </div>
+    
+        <div class="indicator">
+            <h3>GDP Growth and Unemployment Rate</h3>
+            <p>
+                There is generally an inverse relationship between GDP growth and unemployment, known as Okun's Law. For example, in 2020, a GDP decline of 2.1% corresponded with an unemployment rate of 6.5%, while in 2021, GDP growth of 4.9% was paired with a drop in unemployment to 5.1%.
+                
+                Typically, lower unemployment signals stronger economic performance and higher GDP growth. However, when unemployment approaches very low levels (around 1%), GDP growth can become unpredictable, fluctuating between 0.3% and -0.1%. This suggests that at extremely low unemployment, the economy may face constraints like labor shortages and increased costs, dampening growth despite a tight labor market.</p>
+        </div>
+    
+        <div class="indicator">
+            <h3>GDP Growth and Government Debt</h3>
+            <p>There is no certain correlation between government debt and GDP growth. The data indicates that most instances show GDP growth around 0.02% when government debt levels are present. This suggests that while there may be some relationship, it is not definitive, and other factors likely play a significant role in influencing GDP growth.</p>
+        </div>
+    </div>
+    
+    
+    <!-- Area Plot: Gross State Product -->
+    <h2>Gross State Product of Australian States</h2>
+    <div id="state-product-area-plot" class="chart-container"></div>
+    <p>
+        The area chart illustrating the dataset presents a compelling visual representation of the population growth trends across Australia's states and territories from June 1990 to June 2023. The chart showcases the steady upward trajectory of population numbers in New South Wales, Victoria, Queensland, and other regions, highlighting the relative growth rates and demographic shifts over the years. Notably, New South Wales and Victoria consistently maintain the largest populations, with both states experiencing substantial growth, peaking at approximately 733,087 and 535,489 residents, respectively, by mid-2023. Queensland also demonstrates robust growth, particularly evident in the late 2000s and 2010s, culminating in a population of 464,580 in June 2023. In contrast, regions like the Northern Territory and the Australian Capital Territory exhibit more modest growth, reflecting unique demographic dynamics. The area chart effectively conveys the disparities in population growth across Australia, providing insights into regional trends and the overall demographic landscape over more than three decades.
+    </p>
+
+    <!-- Map: Global GDP Growth -->
+    <h2>Global GDP Growth Over the Globe</h2>
+    <div id="global-gdp-map" class="map-container"></div>
+    <p>
+        The dataset provides an overview of GDP growth projections for various countries in 2024, with Australia projected to experience a modest growth rate of 1.2%. When comparing Australia to other nations, it reveals a spectrum of economic performance. For instance, countries like Antigua and Barbuda (5.4%), Bangladesh (6%), and Côte d'Ivoire (6.6%) are expected to significantly outpace Australia, indicating more robust economic growth driven by factors such as emerging markets and increased foreign investment.
+
+Conversely, several nations face slower or negative growth projections. For example, Equatorial Guinea is forecasted to contract by -5.5%, and Puerto Rico shows a minimal growth of -0.2%. In comparison, Australia's growth appears tepid, particularly against the backdrop of countries like India (6.3%) and Guyana (26.6%), which are poised for explosive economic expansion. This comparison illustrates Australia’s relatively stable but modest economic outlook amid a global landscape of diverse growth trajectories, emphasizing the varying factors influencing economic performance across different regions.
+    </p>
+
+    <!-- Latest Industry GDP Contribution in Australia (March 2023) -->
+    <h2>Industry GDP Contribution in Australia - March 2023</h2>
+    <div class="chart-container">
+        <div id="industry-gdp-bar-chart" class="chart"></div>
+        <p class="chart-description">
+            The pie chart derived from the dataset provides a visual breakdown of the contributions of various sectors to Australia's Gross Domestic Product (GDP) in dollar amounts and percentage changes. Each sector is represented as a distinct segment, showcasing its relative size and impact on the overall economy. The mining sector stands out as the largest contributor, with a significant value of approximately $80.9 billion, followed by ownership of dwellings at around $45.9 billion. Other notable sectors include agriculture, forestry, and fishing; manufacturing; and health care and social assistance, each contributing substantially to the GDP. The chart highlights the sectors experiencing growth, such as administrative and support services and health care, both showing a percentage change of 2.0%, while agriculture and mining reflect contrasting trends with decreases of -4.8% and modest growth of 1.7%, respectively. This pie chart effectively illustrates the diverse economic landscape of Australia, emphasizing both the magnitude and the varying performance of each sector within the national economy.
+        </p>
+    </div>
+    
+    <!-- Industry Contribution by State -->
+    <h2>Percentage Change of Industry Contribution by State (March 2023)</h2>
+    <div id="industry-state-bar-chart" class="chart-container"></div>
+    <p>Lastly, this graph depicts the contributions of various industries to the Gross Domestic Product (GDP) across different states in Australia, including New South Wales (NSW), Victoria (VIC), Queensland (QLD), South Australia (SA), Western Australia (WA), Tasmania (TAS), Northern Territory (NT), and Australian Capital Territory (ACT), as well as the total national contribution (Aust). Each industry shows varying levels of impact on both state and national economies.
+
+        For instance, the Mining industry significantly contributes to Western Australia's economy with a 1.5% growth, while Northern Territory exhibits a notable decline of -5.3%. Similarly, Transport, Postal, and Warehousing sees positive growth across all regions, especially in Tasmania with a 1% increase, contributing to a national growth of 0.6%. On the other hand, Agriculture, Forestry, and Fishing presents mixed results, with slight growth in Queensland (0.3%) and South Australia (0.4%) but declines in Tasmania (-0.7%) and Victoria (-0.1%).
+        
+        By comparing state-level contributions to the national total, this graph highlights regional strengths and industry-specific trends, showcasing how each state's economic activities contribute to the overall national performance across sectors like mining, manufacturing, and healthcare.</p>
+</div>
+
+<footer>
+    <div class="metadata">
+        <h2>Metadata</h2>
+        <ul>
+            <li>
+                <strong>First Graph:</strong> 
+                <p>Source: <a href="https://www.imf.org/en/Publications/WEO/weo-database/2022/October/weo-report?c=193,&s=NGDP_RPCH,NGDPD,PPPGDP,NGDPDPC,PPPPC,PCPIPCH,LUR,GGXWDG_NGDP,&sy=1980&ey=2027&ssm=0&scsm=1&scc=0&ssd=1&ssc=0&sic=0&sort=country&ds=.&br=1" target="_blank">International Monetary Fund</a></p>
+            </li>
+            <li>
+                <strong>Second Graph:</strong> 
+                <p>Source: <a href="https://www.abs.gov.au/statistics/economy/national-accounts/australian-national-accounts-state-accounts/latest-release#new-south-wales" target="_blank">Australian Bureau of Statistics</a></p>
+            </li>
+            <li>
+                <strong>Third Graph:</strong> 
+                <p>Source: <a href="https://www.kaggle.com/datasets/sazidthe1/world-gdp-growth" target="_blank">Kaggle Dataset</a></p>
+            </li>
+            <li>
+                <strong>Fourth Graph:</strong> 
+                <p>Source: <a href="https://www.abs.gov.au/statistics/labour/employment-and-unemployment/labour-force-australia-detailed/latest-release" target="_blank">Australian Bureau of Statistics - Labour Force</a></p>
+            </li>
+            <li>
+                <strong>Fifth Graph:</strong> 
+                <p>Source: <a href="https://www.abs.gov.au/statistics/economy/national-accounts/australian-national-accounts-state-accounts/latest-release#new-south-wales" target="_blank">Australian Bureau of Statistics - State Accounts</a></p>
+            </li>
+        </ul>
+        <p><strong>Author:</strong>Sing Yau Lo</p>
+        <p><strong>Date:</strong> 12/10/2024</p>
+    </div>
+    
+</footer>
+
+<script>
+    // Vega-Lite specification for GDP (PPP) and GDP (Nominal)
     const specvisGDPnominalandPPP = {
-  "$schema": "https://vega.github.io/schema/vega-lite/v5.json",
-  "data": {
-    "url": "https://raw.githubusercontent.com/tedasdf/assignment2/refs/heads/main/csv_file/GDP_INF_UNE_DEBT_RATE.csv",
-    "format": {
-      "type": "csv"
-    }
-  },
-  "transform": [
-    {
-      "fold": ["GDP(in billion USDPPP)", "GDP (in billion USDnominal)"],
-      "as": ["GDP Type", "Value"]
-    }
-  ],
-  "layer": [
-    {
-      "mark": "line",
-      "encoding": {
-        "x": {
-          "field": "Year",
-          "type": "temporal",
-          "title": "Year"
-        },
-        "y": {
-          "field": "Value",
-          "type": "quantitative",
-          "title": "GDP (in billion)",
-          "axis": {"titleColor": "#1f77b4"}
-        },
-        "color": {
-          "field": "GDP Type",
-          "type": "nominal",
-          "scale": {
-            "domain": [
-              "GDP(in billion USDPPP)",
-              "GDP (in billion USDnominal)"
-            ],
-            "range": ["#1f77b4", "#ff7f0e"]
-          },
-          "legend": {
-            "title": "GDP Type"
+      "$schema": "https://vega.github.io/schema/vega-lite/v5.json",
+      "data": {
+        "url": "https://raw.githubusercontent.com/tedasdf/assignment2/refs/heads/main/csv_file/GDP_INF_UNE_DEBT_RATE.csv",
+        "format": {
+          "type": "csv"
+        }
+      },
+      "transform": [
+        {
+          "fold": ["GDP(in billion USDPPP)", "GDP (in billion USDnominal)"],
+          "as": ["GDP Type", "Value"]
+        }
+      ],
+      "layer": [
+        {
+          "mark": "line",
+          "encoding": {
+            "x": {
+              "field": "Year",
+              "type": "temporal",
+              "title": "Year"
+            },
+            "y": {
+              "field": "Value",
+              "type": "quantitative",
+              "title": "GDP (in billion)",
+              "axis": {"titleColor": "#1f77b4"}
+            },
+            "color": {
+              "field": "GDP Type",
+              "type": "nominal",
+              "scale": {
+                "domain": [
+                  "GDP(in billion USDPPP)",
+                  "GDP (in billion USDnominal)"
+                ],
+                "range": ["#1f77b4", "#ff7f0e"]
+              },
+              "legend": {
+                "title": "GDP Type"
+              }
+            }
           }
         }
-      }
-    }
-  ],
-  "resolve": {"scale": {"y": "shared"}},
-  "title": "Comparison of GDP (PPP) and GDP (Nominal) Over the Years",
-  "width": 800,
-  "height": 400
-};
+      ],
+      "resolve": {"scale": {"y": "shared"}},
+      "title": "Comparison of GDP (PPP) and GDP (Nominal) Over the Years",
+      "width": 800,
+      "height": 400
+    };
 
-      vegaEmbed('#visGDPnominalandPPP', specvisGDPnominalandPPP);
-
-  </script>'
-  
-  <h1></h1>
-  <div id="visGDPinfl">GDP nominal and PPP</div>
-
-  <script type="text/javascript">
+    // Embed the Vega-Lite visualization
+    vegaEmbed('#gdp-line-chart', specvisGDPnominalandPPP).catch(console.error);
+    
     const specvisGDPinfl = {
   "$schema": "https://vega.github.io/schema/vega-lite/v5.json",
   "hconcat": [
@@ -248,19 +356,13 @@ a:hover {
       },
       "title": "Correlation between GDP Growth and Government Debt (% of GDP)"
     }
-  ]
+  ],
+  
 };
 
-      vegaEmbed('#visGDPinfl', specvisGDPinfl);
+vegaEmbed('#correlation-dot-plot', specvisGDPinfl);
 
-  </script>
-  
-
-  <h1></h1>
-  <div id="visGSP">GDP nominal and PPP</div>
-
-  <script type="text/javascript">
-    const specvisGSP = {
+const specvisGSP = {
   "$schema": "https://vega.github.io/schema/vega-lite/v5.json",
   "data": {
     "url": "https://raw.githubusercontent.com/tedasdf/assignment2/refs/heads/main/csv_file/Gross%20state%20product-%20Chain%20volume%20measures%20in%20millions.csv",
@@ -281,6 +383,10 @@ a:hover {
         "Australian Capital Territory"
       ],
       "as": ["State", "GSP"] 
+    }, 
+    {
+      "calculate": "datum.GSP / 1000",
+      "as": "GSP_in_billions"
     }
   ],
   "mark": "area",
@@ -294,9 +400,9 @@ a:hover {
       }
     },
     "y": {
-      "field": "GSP",
+      "field": "GSP_in_billions",
       "type": "quantitative",
-      "title": "Gross State Product (in millions AUD)"
+      "title": "Gross State Product (in billions AUD)"
     },
     "color": {
       "field": "State",
@@ -306,264 +412,286 @@ a:hover {
     "tooltip": [
       {"field": "State", "type": "nominal", "title": "State"},
       {"field": "Year", "type": "temporal", "title": "Year"},
-      {"field": "GSP", "type": "quantitative", "title": "Gross State Product (in millions AUD)"}
+      {"field": "GSP_in_billions", "type": "quantitative", "title": "Gross State Product (in billions AUD)"}
     ]
-  }
-};
-
-      vegaEmbed('#visGSP', specvisGSP);
-
-  </script>
-    <!-- <p>The first visualization presents a line chart illustrating job vacancies across various Australian states and territories over time, specifically from August 2019 to August 2024. Each line represents a different state, including New South Wales (NSW), Victoria (Vic), Queensland (Qld), South Australia (SA), Western Australia (WA), Tasmania (Tas), Northern Territory (NT), and the Australian Capital Territory (ACT). The x-axis displays the quarters, while the y-axis quantifies job vacancies in thousands. This visualization effectively highlights trends in job vacancies, allowing for comparisons between states and territories as well as insights into fluctuations over the specified time frame. The interactive tooltip feature enhances the user experience by providing detailed information on vacancies for each state at specific quarters.</p>
-    <script type="text/javascript">
-        const spec1 = {
-    "$schema": "https://vega.github.io/schema/vega-lite/v5.json",
-    "description": "Job Vacancies in Australian States and Territories Over Time",
-    "width": 800,
-    "height": 400,
-    "data": {
-      "values": [
-        {"quarter": "Aug-19", "NSW": 72.8, "Vic": 61.2, "Qld": 39.1, "SA": 11.3, "WA": 26.4, "Tas": 3.6, "NT": 4.3, "ACT": 7.6},
-        {"quarter": "Nov-19", "NSW": 80.2, "Vic": 60.1, "Qld": 39.2, "SA": 11.4, "WA": 25.7, "Tas": 3.6, "NT": 3.5, "ACT": 7.7},
-        {"quarter": "Feb-20", "NSW": 79.3, "Vic": 59.7, "Qld": 38.4, "SA": 11.7, "WA": 27.6, "Tas": 3.4, "NT": 2.9, "ACT": 6.6},
-        {"quarter": "May-20", "NSW": 39.8, "Vic": 28.7, "Qld": 25.2, "SA": 6.8, "WA": 16.8, "Tas": 1.9, "NT": 1.7, "ACT": 3.6},
-        {"quarter": "Aug-20", "NSW": 62.2, "Vic": 45.8, "Qld": 42.1, "SA": 12.5, "WA": 32.2, "Tas": 3.4, "NT": 4.2, "ACT": 5.6},
-        {"quarter": "Nov-20", "NSW": 82.7, "Vic": 58.4, "Qld": 47.9, "SA": 15.6, "WA": 37.4, "Tas": 5.1, "NT": 4.2, "ACT": 7.9},
-        {"quarter": "Feb-21", "NSW": 94, "Vic": 65.6, "Qld": 53.5, "SA": 19.3, "WA": 40, "Tas": 5.7, "NT": 4.8, "ACT": 8.2},
-        {"quarter": "May-21", "NSW": 112.8, "Vic": 87.6, "Qld": 67.2, "SA": 21.3, "WA": 46.2, "Tas": 6.5, "NT": 5, "ACT": 8.8},
-        {"quarter": "Aug-21", "NSW": 95.2, "Vic": 81.3, "Qld": 70.6, "SA": 18, "WA": 52.1, "Tas": 5.8, "NT": 6.1, "ACT": 8},
-        {"quarter": "Nov-21", "NSW": 120.9, "Vic": 106, "Qld": 70.3, "SA": 23.7, "WA": 60.8, "Tas": 6.8, "NT": 6.2, "ACT": 9.9},
-        {"quarter": "Feb-22", "NSW": 130, "Vic": 101.8, "Qld": 76.9, "SA": 24.5, "WA": 66.5, "Tas": 7.3, "NT": 8.5, "ACT": 11.5},
-        {"quarter": "May-22", "NSW": 145.1, "Vic": 120.1, "Qld": 78.6, "SA": 24.5, "WA": 65.2, "Tas": 7.5, "NT": 7.7, "ACT": 12.3},
-        {"quarter": "Aug-22", "NSW": 150.8, "Vic": 126.6, "Qld": 85.8, "SA": 25.2, "WA": 60.7, "Tas": 6.3, "NT": 7.6, "ACT": 12},
-        {"quarter": "Nov-22", "NSW": 133, "Vic": 117.7, "Qld": 85.7, "SA": 25.3, "WA": 61.9, "Tas": 7.1, "NT": 7.5, "ACT": 12.2},
-        {"quarter": "Feb-23", "NSW": 145, "Vic": 110.8, "Qld": 85, "SA": 22.9, "WA": 52.8, "Tas": 7.7, "NT": 6.9, "ACT": 11.5},
-        {"quarter": "May-23", "NSW": 128.1, "Vic": 105.1, "Qld": 77.1, "SA": 24.9, "WA": 54.9, "Tas": 7.1, "NT": 6.3, "ACT": 11.4},
-        {"quarter": "Aug-23", "NSW": 122.4, "Vic": 99.6, "Qld": 80, "SA": 24.7, "WA": 52.5, "Tas": 6.8, "NT": 6, "ACT": 10.4},
-        {"quarter": "Nov-23", "NSW": 119.5, "Vic": 94.9, "Qld": 78.2, "SA": 24, "WA": 49.5, "Tas": 6.5, "NT": 5.2, "ACT": 8.6},
-        {"quarter": "Feb-24", "NSW": 107.6, "Vic": 91.5, "Qld": 69.5, "SA": 25.9, "WA": 47.8, "Tas": 6.8, "NT": 4.8, "ACT": 8.7},
-        {"quarter": "May-24", "NSW": 103.5, "Vic": 87.4, "Qld": 67, "SA": 21.5, "WA": 42, "Tas": 6.4, "NT": 5.5, "ACT": 8.3},
-        {"quarter": "Aug-24", "NSW": 101.4, "Vic": 82.8, "Qld": 67.5, "SA": 19.5, "WA": 41.5, "Tas": 6.1, "NT": 5.1, "ACT": 7.9}
-      ]
-    },
-    "transform": [
-      {
-        "fold": ["NSW", "Vic", "Qld", "SA", "WA", "Tas", "NT", "ACT"],
-        "as": ["State", "Vacancies"]
-      }
-    ],
-    "mark": "line",
-    "encoding": {
-      "x": {
-        "field": "quarter",
-        "type": "ordinal",
-        "title": "Quarter"
-      },
-      "y": {
-        "field": "Vacancies",
-        "type": "quantitative",
-        "title": "Job Vacancies ('000)"
-      },
-      "color": {
-        "field": "State",
-        "type": "nominal",
-        "title": "State/Territory",
-        "scale": {
-            "domain": ["NSW", "Vic", "Qld", "SA", "WA", "Tas", "NT", "ACT", "Australia", "Seasonally Adjusted", "Trend"],
-            "range": ["#1f77b4", "#ff7f0e", "#2ca02c", "#d62728", "#9467bd", "#8c564b", "#e377c2", "#7f7f7f", "#bcbd22", "#17becf", "#9edae5"]
-        }
-      },
-      "tooltip": [
-        {"field": "State", "type": "nominal"},
-        {"field": "Vacancies", "type": "quantitative"},
-        {"field":"quarter" , "type": "nominal"}
-      ]
-    }
-  };
-
-  vegaEmbed('#vis1', spec1).catch(console.error);
-  
-    </script>
-    
-    <h1>Change in Job Vacancies</h1>
-    <div id="vis"></div>
-    
-    <p>This dataset provides quarterly changes in job vacancies across various Australian states and territories from May 2023 to August 2024. Each entry lists the percentage change in job vacancies for New South Wales (NSW), Victoria (Vic), Queensland (Qld), South Australia (SA), Western Australia (WA), Tasmania (Tas), Northern Territory (NT), and the Australian Capital Territory (ACT), as well as the overall change for Australia. The data reveals fluctuations in job vacancies, with both increases and decreases observed in different states over the specified quarters. For example, while South Australia saw an increase of 8.7% in May 2023, New South Wales experienced a decline of 11.7%. The dataset also includes seasonally adjusted figures and trend values, which help to smooth out seasonal variations and provide a clearer picture of underlying trends in job vacancies.</p>
-    <script type="text/javascript">
-        const spec = {
-    "$schema": "https://vega.github.io/schema/vega-lite/v5.json",
-    "description": "Change in job vacancies, states and territories",
-    "width": 800,
-    "height": 400,
-    "data": {
-        "values": [
-            {"quarter": "May-23", "NSW": -11.7, "Vic": -5.1, "Qld": -9.3, "SA": 8.7, "WA": 4.0, "Tas": -7.6, "NT": -8.3, "ACT": -1.1, "Australia": -6.2, "Seasonally Adjusted": -3.5, "Trend": -4.4},
-            {"quarter": "Aug-23", "NSW": -4.5, "Vic": -5.2, "Qld": 3.8, "SA": -1.0, "WA": -4.3, "Tas": -4.7, "NT": -4.8, "ACT": -8.4, "Australia": -3.0, "Seasonally Adjusted": -6.1, "Trend": -4.6},
-            {"quarter": "Nov-23", "NSW": -2.3, "Vic": -4.7, "Qld": -2.2, "SA": -2.8, "WA": -5.8, "Tas": -3.6, "NT": -13.9, "ACT": -17.2, "Australia": -3.9, "Seasonally Adjusted": -3.3, "Trend": -5.0},
-            {"quarter": "Feb-24", "NSW": -10.0, "Vic": -3.6, "Qld": -11.1, "SA": 8.0, "WA": -3.3, "Tas": 4.7, "NT": -7.4, "ACT": 1.0, "Australia": -6.1, "Seasonally Adjusted": -6.3, "Trend": -4.8},
-            {"quarter": "May-24", "NSW": -3.8, "Vic": -4.4, "Qld": -3.7, "SA": -17.3, "WA": -12.3, "Tas": -6.6, "NT": 15.2, "ACT": -5.0, "Australia": -5.9, "Seasonally Adjusted": -3.5, "Trend": -4.7},
-            {"quarter": "Aug-24", "NSW": -2.0, "Vic": -5.3, "Qld": 0.9, "SA": -9.0, "WA": -1.0, "Tas": -4.1, "NT": -6.4, "ACT": -4.9, "Australia": -2.8, "Seasonally Adjusted": -5.2, "Trend": -4.6}
-        ]
-    },
-    "transform": [
-        {
-            "fold": ["NSW", "Vic", "Qld", "SA", "WA", "Tas", "NT", "ACT", "Australia", "Seasonally Adjusted", "Trend"],
-            "as": ["State", "Change"]
-        },
-        {
-            "filter": {"selection": "select"}
-        }
-    ],
-    "selection": {
-        "select": {
-            "type": "single",
-            "fields": ["State"],
-            "bind": {
-                "input": "select",
-                "options": [
-                    "NSW", "Vic", "Qld", "SA", "WA", "Tas", "NT", "ACT", "Australia", "Seasonally Adjusted", "Trend"
-                ]
-            },
-            "init": {"State": "NSW"}
-        }
-    },
-    "mark": "line",
-    "encoding": {
-        "x": {"field": "quarter", "type": "ordinal", "title": "Quarter"},
-        "y": {"field": "Change", "type": "quantitative", "title": "Change in Job Vacancies (%)"},
-        "color": {
-            "field": "State",
-            "type": "nominal",
-            "title": "State/Territory",
-            "scale": {
-                "domain": ["NSW", "Vic", "Qld", "SA", "WA", "Tas", "NT", "ACT", "Australia", "Seasonally Adjusted", "Trend"],
-                "range": ["#1f77b4", "#ff7f0e", "#2ca02c", "#d62728", "#9467bd", "#8c564b", "#e377c2", "#7f7f7f", "#bcbd22", "#17becf", "#9edae5"]
-            },
-            
-        },
-        "tooltip": [
-            {"field": "State", "type": "nominal"},
-            {"field": "Change (%)", "type": "quantitative"},
-            {"field": "Quarter", "type": "nominal"}
-        ]
-    }
-};
-
-vegaEmbed('#vis', spec).catch(console.error);
-    </script>
-
-
-
-
-
-    <h1>[VIS 1]Global GDP Growth</h1>
-    <div id="vis2"></div>
-
-    <script>
-        const spec3 = {
-  "$schema": "https://vega.github.io/schema/vega-lite/v5.json",
-  "title": "GDP Data by Country for 2024",
+  },
   "width": 800,
-  "height": 400,
-  "background": "#e0f7fa",
-  "projection": {"type": "equalEarth"},
-  "layer": [
+  "height": 400
+};
+
+vegaEmbed('#state-product-area-plot', specvisGSP);
+
+
+const specMap = {
+    "$schema": "https://vega.github.io/schema/vega-lite/v5.json",
+    "title": "GDP Data by Country for 2024",
+    "width": 800,
+    "height": 400,
+    "background": "#e0f7fa",
+    "projection": {"type": "equalEarth"},
+    "layer": [
     {
-      "data": {
+    "data": {
         "url": "https://raw.githubusercontent.com/tedasdf/assignment/main/ne_110m.json",
         "format": {
-          "type": "topojson",
-          "feature": "ne_110m_admin_0_countries"
+        "type": "topojson",
+        "feature": "ne_110m_admin_0_countries"
         }
-      },
-      "mark": {
+    },
+    "mark": {
         "type": "geoshape",
         "fill": "gray",
         "stroke": "black"
-      },
-      "encoding": {
+    },
+    "encoding": {
         "tooltip": [
-          {"field": "properties.NAME", "type": "nominal", "title": "Country"},
-          {"field": "2024", "type": "quantitative", "title": "GDP (%)"}
+        {"field": "properties.NAME", "type": "nominal", "title": "Country"},
+        {"field": "2024", "type": "quantitative", "title": "GDP (%)"}
         ]
-      }
+    }
     },
     {
-      "data": {
+    "data": {
         "url": "https://raw.githubusercontent.com/FIT3179/Vega-Lite/main/3_choropleth_map/js/ne_110m_admin_0_countries.topojson",
         "format": {
-          "type": "topojson",
-          "feature": "ne_110m_admin_0_countries"
+        "type": "topojson",
+        "feature": "ne_110m_admin_0_countries"
         }
-      },
+    },
 
-      "transform": [        
+    "transform": [        
         {
-          "lookup": "properties.NAME",
-          "from": {
+        "lookup": "properties.NAME",
+        "from": {
             "data": {
-              "url": "https://raw.githubusercontent.com/tedasdf/assignment/main/world_gdp_data.csv",
-              "format": {"type": "csv"}
+            "url": "https://raw.githubusercontent.com/tedasdf/assignment/main/world_gdp_data.csv",
+            "format": {"type": "csv"}
             },
             "key": "country_name",
             "fields": ["2024"]
-          }
+        }
         },
         {
-          "window": [
+        "window": [
             {"op": "min", "field": "2024", "as": "minGDP"},
             {"op": "max", "field": "2024", "as": "maxGDP"}
-          ]
+        ]
         },
         {
-          "calculate": "(datum['2024'] - datum['minGDP']) / (datum['maxGDP'] - datum['minGDP'])",
-          "as": "normalized_gdp"
+        "calculate": "(datum['2024'] - datum['minGDP']) / (datum['maxGDP'] - datum['minGDP'])",
+        "as": "normalized_gdp"
         }
         
-      ],
-      "mark": {"type": "geoshape"},
-      "encoding": {
-        "color": {
-          "field": "normalized_gdp",
-          "type": "quantitative",
-          "title": "GDP (2024)",
-          "scale": {
-    "range": ["#ffcccc", "#ff0000"]
-},
-          
-          "legend": {
+    ],
+    "mark": {"type": "geoshape"},
+    "encoding": {
+    "color": {
+        "field": "2024",
+        "type": "quantitative",
+        "title": "GDP Growth (2024)",
+        "scale": {
+            "domain": [0, 1, 2, 5, 10, 20, 30],
+            "range": ["#440154", "#482878", "#3e4989", "#31688e", "#26828e", "#35b779", "#fde725"] 
+        },
+        
+        "legend": {
             "title": "Normalized GDP (2024)",
             "orient": "bottom-right",
             "format": ".2f"
-          },
-          
+        }
         },
         "tooltip": [
-          {"field": "properties.NAME", "type": "nominal", "title": "Country"},
-          {"field": "2024", "type": "quantitative", "title": "GDP (%)"}
+        {"field": "properties.NAME", "type": "nominal", "title": "Country"},
+        {"field": "2024", "type": "quantitative", "title": "GDP (%)"}
         ]
-      }
+    }
     },
     {
-      "data": {
+    "data": {
         "url": "https://raw.githubusercontent.com/tedasdf/assignment/main/ne_110m.json",
         "format": {
-          "type": "topojson",
-          "feature": "ne_110m_graticules_30"
+        "type": "topojson",
+        "feature": "ne_110m_graticules_30"
         }
-      },
-      "mark": {
+    },
+    "mark": {
         "type": "geoshape",
         "fill": null,
         "stroke": "black"
+    }
+    }
+    ]
+}
+vegaEmbed('#global-gdp-map', specMap);
+const spec = {
+  "$schema": "https://vega.github.io/schema/vega-lite/v5.json",
+  "description": "A pie chart showing GDP contribution by industry, grouping smaller values into 'Others'.",
+  "data": {
+      "url": "https://raw.githubusercontent.com/tedasdf/assignment2/refs/heads/main/csv_file/GDPcontributionbyindustry.csv",
+      "format": {
+          "type": "csv"
       }
+  },
+  "transform": [
+      {
+          "filter": "datum.Sector !== 'GROSS DOMESTIC PRODUCT ;' && datum.Sector !== 'Gross value added at basic prices ;'"
+      },
+      {
+          "calculate": "datum['$ Millions'] < 11000 ? 'Others' : datum.Sector",
+          "as": "Sector_Grouped"
+      }
+  ],
+  "mark": "arc",
+  "encoding": {
+      "theta": {
+          "field": "$ Millions",
+          "type": "quantitative",
+          "aggregate": "sum"
+      },
+      "color": {
+          "field": "Sector_Grouped",
+          "type": "nominal",
+          "scale": {
+              "scheme": "category20"
+          },
+          "legend": {
+              "title": "Industry"
+          }
+      },
+      "tooltip": [
+          {"field": "Sector_Grouped", "type": "nominal", "title": "Industry"},
+          {"field": "$ Millions", "type": "quantitative", "title": "Contribution ($ Millions)", "format": ".3s"},
+          {"field": "Percentage changes", "type": "quantitative", "title": "Percentage changes(%)"}
+      ]
+  }
+};
+vegaEmbed('#industry-gdp-bar-chart', spec);
+const specfinal = {
+  "$schema": "https://vega.github.io/schema/vega-lite/v5.json",
+  "width": 800,
+  "height": 400,
+  "hconcat": [
+    {
+      "data": {
+        "url": "https://raw.githubusercontent.com/tedasdf/assignment2/refs/heads/main/csv_file/different%20state%20contribution%20to%20GSP%20by%20Industry%20vs%20Australia.csv",
+        "format": {
+          "type": "csv"
+        }
+      },
+      "transform": [
+        {
+          "fold": ["NSW", "VIC", "QLD", "SA", "WA", "TAS", "NT", "ACT", "Aust"],
+          "as": ["State", "Contribution"]
+        },
+        {
+          "calculate": "clamp(datum.Contribution, -2, 2)",  // Clamping the values
+          "as": "CappedContribution"
+        },
+        {
+          "filter": {
+            "param": "select"
+          }
+        }
+      ],
+      "selection": {
+        "select": {
+          "type": "single",
+          "fields": ["State"],
+          "bind": {
+            "input": "select",
+            "options": ["NSW", "VIC", "QLD", "SA", "WA", "TAS", "NT", "ACT"]
+          },
+          "init": {"State": "NSW"}
+        }
+      },
+      "mark": {
+        "type": "bar",
+        "opacity": 1
+      },
+      "encoding": {
+        "y": {
+          "field": "industry",
+          "type": "nominal",
+          "title": "Industry",
+          "sort": null
+        },
+        "x": {
+          "field": "CappedContribution",  // Use the clamped values
+          "type": "quantitative",
+          "title": "Contribution to GSP (ppt)",
+          "scale": {
+            "domain": [-2, 2]  // Set the scale between -2 and 2
+          }
+        },
+        "color": {
+          "field": "State",
+          "type": "nominal",
+          "title": "State",
+          "legend": null
+        },
+        "tooltip": [
+          {"field": "industry", "type": "nominal", "title": "Industry"},
+          {"field": "Contribution", "type": "quantitative", "title": "Original Contribution (ppt)"},
+        ]
+      },
+      "title": "Contribution of Industries to GSP by Selected States"
+    },
+    {
+      "data": {
+        "url": "https://raw.githubusercontent.com/tedasdf/assignment2/refs/heads/main/csv_file/different%20state%20contribution%20to%20GSP%20by%20Industry%20vs%20Australia.csv",
+        "format": {
+          "type": "csv"
+        }
+      },
+      "transform": [
+        {
+          "fold": ["Aust"],
+          "as": ["State", "Contribution"]
+        },
+        {
+          "calculate": "clamp(datum.Contribution, -2, 2)",  // Clamping the values
+          "as": "CappedContribution"
+        },
+        {
+          "filter": {
+            "field": "State",
+            "equal": "Aust"
+          }
+        }
+      ],
+      "mark": {
+        "type": "bar",
+        "opacity": 1
+      },
+      "encoding": {
+        "y": {
+          "field": "industry",
+          "type": "nominal",
+          "title": "Industry",
+          "sort": null
+        },
+        "x": {
+          "field": "CappedContribution",  // Use the clamped values
+          "type": "quantitative",
+          "title": "Contribution to GSP (ppt)",
+          "scale": {
+            "domain": [-2, 2]  // Set the scale between -2 and 2
+          }
+        },
+        "color": {
+          "value": "#1f77b4"
+        },
+        "tooltip": [
+          {"field": "industry", "type": "nominal", "title": "Industry"},
+          {"field": "Contribution", "type": "quantitative", "title": "Original Contribution (ppt)"},  // Display original value in tooltip
+        ]
+      },
+      "title": "Total Contribution of Industries in Australia"
     }
   ]
 };
+vegaEmbed('#industry-state-bar-chart', specfinal);
+</script>
 
-        vegaEmbed('#vis2', spec3).then(result => {
-            console.log(result);
-        }).catch(console.error);
-    </script> -->
 </body>
 </html>

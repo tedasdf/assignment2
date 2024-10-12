@@ -1,0 +1,100 @@
+{
+    "$schema": "https://vega.github.io/schema/vega-lite/v5.json",
+    "title": "GDP Data by Country for 2024",
+    "width": 800,
+    "height": 400,
+    "background": "#e0f7fa",
+    "projection": {"type": "equalEarth"},
+    "layer": [
+    {
+    "data": {
+        "url": "https://raw.githubusercontent.com/tedasdf/assignment/main/ne_110m.json",
+        "format": {
+        "type": "topojson",
+        "feature": "ne_110m_admin_0_countries"
+        }
+    },
+    "mark": {
+        "type": "geoshape",
+        "fill": "gray",
+        "stroke": "black"
+    },
+    "encoding": {
+        "tooltip": [
+        {"field": "properties.NAME", "type": "nominal", "title": "Country"},
+        {"field": "2024", "type": "quantitative", "title": "GDP (%)"}
+        ]
+    }
+    },
+    {
+    "data": {
+        "url": "https://raw.githubusercontent.com/FIT3179/Vega-Lite/main/3_choropleth_map/js/ne_110m_admin_0_countries.topojson",
+        "format": {
+        "type": "topojson",
+        "feature": "ne_110m_admin_0_countries"
+        }
+    },
+
+    "transform": [        
+        {
+        "lookup": "properties.NAME",
+        "from": {
+            "data": {
+            "url": "https://raw.githubusercontent.com/tedasdf/assignment/main/world_gdp_data.csv",
+            "format": {"type": "csv"}
+            },
+            "key": "country_name",
+            "fields": ["2024"]
+        }
+        },
+        {
+        "window": [
+            {"op": "min", "field": "2024", "as": "minGDP"},
+            {"op": "max", "field": "2024", "as": "maxGDP"}
+        ]
+        },
+        {
+        "calculate": "(datum['2024'] - datum['minGDP']) / (datum['maxGDP'] - datum['minGDP'])",
+        "as": "normalized_gdp"
+        }
+        
+    ],
+    "mark": {"type": "geoshape"},
+    "encoding": {
+    "color": {
+        "field": "2024",
+        "type": "quantitative",
+        "title": "GDP Growth (2024)",
+        "scale": {
+            "domain": [0, 1, 2, 5, 10, 20, 30],
+            "range": ["#440154", "#482878", "#3e4989", "#31688e", "#26828e", "#35b779", "#fde725"] 
+        },
+        
+        "legend": {
+            "title": "Normalized GDP (2024)",
+            "orient": "bottom-right",
+            "format": ".2f"
+        }
+        },
+        "tooltip": [
+        {"field": "properties.NAME", "type": "nominal", "title": "Country"},
+        {"field": "2024", "type": "quantitative", "title": "GDP (%)"}
+        ]
+    }
+    },
+    {
+    "data": {
+        "url": "https://raw.githubusercontent.com/tedasdf/assignment/main/ne_110m.json",
+        "format": {
+        "type": "topojson",
+        "feature": "ne_110m_graticules_30"
+        }
+    },
+    "mark": {
+        "type": "geoshape",
+        "fill": null,
+        "stroke": "black"
+    }
+    }
+    ]
+}

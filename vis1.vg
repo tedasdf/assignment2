@@ -1,122 +1,42 @@
 {
   "$schema": "https://vega.github.io/schema/vega-lite/v5.json",
-  "selection": {
-    "year_selection": {
-      "type": "single",
-      "fields": ["Year"],
-      "bind": {
-        "input": "range",
-        "min": 1980,
-        "max": 2027,
-        "step": 1
+  "description": "A pie chart showing GDP contribution by industry, grouping smaller values into 'Others'.",
+  "data": {
+      "url": "https://raw.githubusercontent.com/tedasdf/assignment2/refs/heads/main/csv_file/GDPcontributionbyindustry.csv",
+      "format": {
+          "type": "csv"
       }
-    }
   },
-  "hconcat": [
-    {
-      "data": {
-        "url": "https://raw.githubusercontent.com/tedasdf/assignment2/refs/heads/main/csv_file/GDP_INF_UNE_DEBT_RATE.csv",
-        "format": {
-          "type": "csv"
-        },
-        
+  "transform": [
+      {
+          "filter": "datum.Sector !== 'GROSS DOMESTIC PRODUCT ;' && datum.Sector !== 'Gross value added at basic prices ;'"
       },
-      "transform": [
-        {
-          "calculate": "datum['Inflation rate(in percent)'] === 'N/A' ? 0 : datum['Inflation rate(in percent)']",
-          "as": "Inflation Rate (Cleaned)"
-        },
-        {
-          "calculate": "datum['Unemployment (in percent)'] === 'N/A' ? 0 : datum['Unemployment (in percent)']",
-          "as": "Unemployment Rate (Cleaned)"
-        },
-        {
-          "calculate": "datum['Government debt(in percent of GDP)'] === 'N/A' ? 0 : datum['Government debt(in percent of GDP)']",
-          "as": "Government Debt (Cleaned)"
-        }
-      ],
-      "mark": "point",
-      "encoding": {
-        "x": {
-          "field": "GDP growth (real)",
+      {
+          "calculate": "datum['$ Millions'] < 11000 ? 'Others' : datum.Sector",
+          "as": "Sector_Grouped"
+      }
+  ],
+  "mark": "arc",
+  "encoding": {
+      "theta": {
+          "field": "$ Millions",
           "type": "quantitative",
-          "title": "GDP Growth (Real)"
-        },
-        "y": {
-          "field": "Inflation Rate (Cleaned)",
-          "type": "quantitative",
-          "title": "Inflation Rate (%)"
-        },
-        "tooltip": [
-          {"field": "GDP growth (real)", "type": "quantitative"},
-          {"field": "Inflation Rate (Cleaned)", "type": "quantitative"}
-        ]
+          "aggregate": "sum"
       },
-      "title": "Correlation between GDP Growth and Inflation Rate"
-    },
-    {
-      "data": {
-        "url": "https://raw.githubusercontent.com/tedasdf/assignment2/refs/heads/main/csv_file/GDP_INF_UNE_DEBT_RATE.csv",
-        "format": {
-          "type": "csv"
-        }
+      "color": {
+          "field": "Sector_Grouped",
+          "type": "nominal",
+          "scale": {
+              "scheme": "category20"
+          },
+          "legend": {
+              "title": "Industry"
+          }
       },
-      "transform": [
-        {
-          "calculate": "datum['Unemployment (in percent)'] === 'N/A' ? 0 : datum['Unemployment (in percent)']",
-          "as": "Unemployment Rate (Cleaned)"
-        }
-      ],
-      "mark": "point",
-      "encoding": {
-        "x": {
-          "field": "GDP growth (real)",
-          "type": "quantitative",
-          "title": "GDP Growth (Real)"
-        },
-        "y": {
-          "field": "Unemployment Rate (Cleaned)",
-          "type": "quantitative",
-          "title": "Unemployment Rate (%)"
-        },
-        "tooltip": [
-          {"field": "GDP growth (real)", "type": "quantitative"},
-          {"field": "Unemployment Rate (Cleaned)", "type": "quantitative"}
-        ]
-      },
-      "title": "Correlation between GDP Growth and Unemployment Rate"
-    },
-    {
-      "data": {
-        "url": "https://raw.githubusercontent.com/tedasdf/assignment2/refs/heads/main/csv_file/GDP_INF_UNE_DEBT_RATE.csv",
-        "format": {
-          "type": "csv"
-        }
-      },
-      "transform": [
-        {
-          "calculate": "datum['Government debt(in percen of GDP)'] === 'n/a' ? 0 : datum['Government debt(in percen of GDP)']",
-          "as": "Government Debt (Cleaned)"
-        }
-      ],
-      "mark": "point",
-      "encoding": {
-        "x": {
-          "field": "GDP growth (real)",
-          "type": "quantitative",
-          "title": "GDP Growth (Real)"
-        },
-        "y": {
-          "field": "Government Debt (Cleaned)",
-          "type": "quantitative",
-          "title": "Government Debt (% of GDP)"
-        },
-        "tooltip": [
-          {"field": "GDP growth (real)", "type": "quantitative"},
-          {"field": "Government Debt (Cleaned)", "type": "quantitative"}
-        ]
-      },
-      "title": "Correlation between GDP Growth and Government Debt (% of GDP)"
-    }
-  ]
+      "tooltip": [
+          {"field": "Sector_Grouped", "type": "nominal", "title": "Industry"},
+          {"field": "$ Millions", "type": "quantitative", "title": "Contribution ($ Millions)", "format": ".3s"},
+          {"field": "Percentage changes", "type": "quantitative", "title": "Percentage changes(%)"}
+      ]
+  }
 }
